@@ -6,17 +6,21 @@ const Formulario = () => {
     const [email, setEmail] = useState("");
     const [date, setDate] = useState("");
     const [symtoms, setSymtoms] = useState("");
+
+    const [error, setError] = useState(false);
     
     const handleSubmit = (e) => {
         e.preventDefault();
 
         if([name, owner, email, date, symtoms].includes("")){
             console.log("Hay al menos un campo vacío.");
+            setError(true);
         } else {
-            console.log("Todos llenos");
+            setError(false);
         }
     }
 
+    //booleanVariable && result -> Es otra forma de hacer un ternario con solo 1 respuesta
     return (
         <div className="md:w-1/2 lg:w-2/5">
             <h2 className="font-black text-3xl text-center">Segimiento Pacientes</h2>
@@ -27,6 +31,11 @@ const Formulario = () => {
                 onSubmit={handleSubmit}
                 className="bg-white shadow-md rounded-lg py-10 px-5 mb-10"
              >
+                {error && (
+                    <div className='bg-red-800 text-white text-center p-3 uppercase font-bold mb-3 rounded'>
+                        <p>Todos los campos son obligatorios</p>
+                    </div>
+                    )}
                 <div className="mb-5">
                     <label htmlFor="pet" className="block text-gray-700 uppercase font-bold">Nombre Mascota {name}</label>
                     <input id="pet" type="text" placeholder="Nombre de la mascota" className="border-2 w-full p-2 mt-2 placeholder-gray-400 rounded-md"
