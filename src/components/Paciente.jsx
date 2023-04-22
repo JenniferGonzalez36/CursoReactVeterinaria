@@ -1,7 +1,12 @@
 import React from 'react'
 
-const Paciente = ( {client, setClient} ) => {
-  const {name, owner, email, date, symtoms} = client;
+const Paciente = ( {client, setClient, deleteClient} ) => {
+  const {name, owner, email, date, symtoms, id} = client;
+
+  const handleDelete = () => {
+    const answer = confirm("¿Deseas eliminar este paciente?");
+    if(answer) deleteClient(id)
+  }
 
   return (
     <div className="m-3 bg-white shadow-md px-5 py-10 rounded-xl">
@@ -16,7 +21,9 @@ const Paciente = ( {client, setClient} ) => {
           >
             Editar
           </button>
-          <button type="button" className='py-2 px-10 bg-red-600 hover:bg-red-700 text-white foint-bold uppercase rounded-lg'>
+          <button type="button" className='py-2 px-10 bg-red-600 hover:bg-red-700 text-white foint-bold uppercase rounded-lg'
+          onClick={handleDelete}
+          >
             Eliminar
           </button>
         </div>

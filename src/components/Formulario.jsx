@@ -1,7 +1,7 @@
 import {useState, useEffect} from 'react'; //Importando los Hooks "useState" y "useEffect"
 import Error from './Error';
 
-const Formulario = ({clients, setClients, client}) => {
+const Formulario = ({clients, setClients, client, setClient}) => {
     const [name, setName] = useState("");
     const [owner, setOwner] = useState("");
     const [email, setEmail] = useState("");
@@ -11,9 +11,15 @@ const Formulario = ({clients, setClients, client}) => {
     const [error, setError] = useState(false);
 
     //Detecta cada que el elemento [] haya cambiado.
-    /*useEffect(() => {
-        console.log(client);
-    }, [client]);*/
+    useEffect(() => {
+        if(Object.keys(client).length > 0){
+            setName(client.name);
+            setOwner(client.owner);
+            setEmail(client.email);
+            setDate(client.date);
+            setSymtoms(client.symtoms);
+        }
+    }, [client]);
 
     //Si [] está vacío solo se ejecuta una vez al cargar el componente
     /*useEffect(() => {
@@ -31,29 +37,36 @@ const Formulario = ({clients, setClients, client}) => {
         e.preventDefault();
 
         if([name, owner, email, date, symtoms].includes("")){
-            console.log("Hay al menos un campo vacío.");
             setError(true);
-        } else {
-            setError(false);
-
-            const clientObject = {
-                name,
-                owner,
-                email,
-                date,
-                symtoms,
-                id: generateId()
-            };
-
-            setClients([...clients, clientObject]);
-
-            setName("");
-            setOwner("");
-            setEmail("");
-            setDate("");
-            setSymtoms("");
+            return;
         }
 
+        setError(false);
+
+        const clientObject = {
+            name,
+            owner,
+            email,
+            date,
+            symtoms
+        };
+
+        if(client.id){
+            clientObject.id = client.id;
+            const updatedClients = clients.map(clientState => (clientState.id === client.id) ? clientObject : clientState);
+
+            setClients(updatedClients);
+            setClient({});
+        } else {
+            clientObject.id = generateId();
+            setClients([...clients, clientObject]);
+        }
+
+        setName("");
+        setOwner("");
+        setEmail("");
+        setDate("");
+        setSymtoms("");
     }
 
     //booleanVariable && result -> Es otra forma de hacer un ternario con solo 1 respuesta
@@ -69,7 +82,7 @@ const Formulario = ({clients, setClients, client}) => {
              >
                 {error && <Error><p>Todos los campos son obligatorios</p></Error>}
                 <div className="mb-5">
-                    <label htmlFor="pet" className="block text-gray-700 uppercase font-bold">Nombre Mascota {name}</label>
+                    <label htmlFor="pet" className="block text-gray-700 uppercase font-bold">Nombre Mascota</label>
                     <input id="pet" type="text" placeholder="Nombre de la mascota" className="border-2 w-full p-2 mt-2 placeholder-gray-400 rounded-md"
                     value={name} onChange={ (e) => setName(e.target.value) }
                     />
@@ -98,7 +111,7 @@ const Formulario = ({clients, setClients, client}) => {
                     value={symtoms} onChange={ (e) => setSymtoms(e.target.value) }
                     />
                 </div>
-                <input type="submit" className="bg-indigo-600 w-full p-3 text-white font-bold uppercase hover:bg-indigo-700 cursor-pointer transition-all " value="Agregar paciente"/>
+                <input type="submit" className="bg-indigo-600 w-full p-3 text-white font-bold uppercase hover:bg-indigo-700 cursor-pointer transition-all " value={client.id ? "Editar Paciente" : "Agregar Paciente"}/>
             </form>
         </div>
     )
