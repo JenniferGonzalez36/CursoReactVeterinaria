@@ -1,6 +1,7 @@
 import {useState, useEffect} from 'react'; //Importando los Hooks "useState" y "useEffect"
+import Error from './Error';
 
-const Formulario = () => {
+const Formulario = ({clients, setClients, client}) => {
     const [name, setName] = useState("");
     const [owner, setOwner] = useState("");
     const [email, setEmail] = useState("");
@@ -8,6 +9,23 @@ const Formulario = () => {
     const [symtoms, setSymtoms] = useState("");
 
     const [error, setError] = useState(false);
+
+    //Detecta cada que el elemento [] haya cambiado.
+    /*useEffect(() => {
+        console.log(client);
+    }, [client]);*/
+
+    //Si [] está vacío solo se ejecuta una vez al cargar el componente
+    /*useEffect(() => {
+        console.log("El componente está listo");
+    }, []);*/
+
+    const generateId = () => {
+        const random = Math.random().toString(36).substring(2);
+        const date = Date.now().toString(36);
+
+        return random + date;
+    }
     
     const handleSubmit = (e) => {
         e.preventDefault();
@@ -17,7 +35,25 @@ const Formulario = () => {
             setError(true);
         } else {
             setError(false);
+
+            const clientObject = {
+                name,
+                owner,
+                email,
+                date,
+                symtoms,
+                id: generateId()
+            };
+
+            setClients([...clients, clientObject]);
+
+            setName("");
+            setOwner("");
+            setEmail("");
+            setDate("");
+            setSymtoms("");
         }
+
     }
 
     //booleanVariable && result -> Es otra forma de hacer un ternario con solo 1 respuesta
@@ -31,11 +67,7 @@ const Formulario = () => {
                 onSubmit={handleSubmit}
                 className="bg-white shadow-md rounded-lg py-10 px-5 mb-10"
              >
-                {error && (
-                    <div className='bg-red-800 text-white text-center p-3 uppercase font-bold mb-3 rounded'>
-                        <p>Todos los campos son obligatorios</p>
-                    </div>
-                    )}
+                {error && <Error><p>Todos los campos son obligatorios</p></Error>}
                 <div className="mb-5">
                     <label htmlFor="pet" className="block text-gray-700 uppercase font-bold">Nombre Mascota {name}</label>
                     <input id="pet" type="text" placeholder="Nombre de la mascota" className="border-2 w-full p-2 mt-2 placeholder-gray-400 rounded-md"

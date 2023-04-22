@@ -5,18 +5,16 @@ import ListadoPacientes from "./components/ListadoPacientes";
 
 function App() {
 
-  const [pacientes, setPasientes] = useState([]);
+  const [clients, setClients] = useState([]);
+  const [client, setClient] = useState({});
 
-  const printAguacate = () => {
-    console.log("Aguacate");
-  }
 
   return (
     <div className="container mx-auto mt-20">
-      <Header numbers={1} isAdmin={false} fn={printAguacate}/>
+      <Header />
       <div className="mt-12 md:flex">
-        <Formulario />
-        <ListadoPacientes />
+        <Formulario clients={clients} setClients={setClients} client={client}/>
+        <ListadoPacientes clients={clients} setClient={setClient}/>
       </div>
     </div>
   )
